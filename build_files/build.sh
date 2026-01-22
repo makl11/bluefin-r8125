@@ -20,3 +20,9 @@ modinfo /usr/lib/modules/"${KERNEL}"/extra/r8125/r8125.ko.xz >/dev/null ||
 	(find /var/cache/akmods/r8125/ -name \*.log -print -exec cat {} \; && exit 1)
 
 rm -f /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:makl11:r8125-akmod.repo
+
+KERNEL_SUFFIX=""
+QUALIFIED_KERNEL="$(rpm -qa | grep -P 'kernel-(|'"$KERNEL_SUFFIX"'-)(\d+\.\d+\.\d+)' | sed -E 's/kernel-(|'"$KERNEL_SUFFIX"'-)//')"
+export DRACUT_NO_XATTR=1
+/usr/bin/dracut --no-hostonly --kver "$QUALIFIED_KERNEL" --reproducible -v --add ostree -f "/lib/modules/$QUALIFIED_KERNEL/initramfs.img"
+chmod 0600 "/lib/modules/$QUALIFIED_KERNEL/initramfs.img"
