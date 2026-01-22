@@ -3,6 +3,7 @@ ARG BASE_IMAGE=ghcr.io/ublue-os/bluefin-dx-nvidia:stable
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 COPY build_files /
+COPY certs/ /certs/
 
 # Base Image
 FROM ${BASE_IMAGE}
